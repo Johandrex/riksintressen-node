@@ -1,5 +1,20 @@
 # README #
 
+### Installering ###
+# git clone
+1. git clone https://Johandrex@bitbucket.org/Johandrex/node-express.git
+
+# gå in i klonen
+2. cd node-express
+
+# installera node moduler i projektet
+3. npm install express pg
+sudo npm i -g nodemon
+
+# starta applikationen
+4. nodemon index.js
+
+
 This README would normally document whatever steps are necessary to get your application up and running.
 
 ### What is this repository for? ###
