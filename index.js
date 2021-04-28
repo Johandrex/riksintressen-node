@@ -1,4 +1,4 @@
-/* importera databas filer */
+/* importera databas & api filer */
 const database = require("./database");
 const api = require("./api");
 
