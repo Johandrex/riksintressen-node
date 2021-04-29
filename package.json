@@ -15,6 +15,7 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/Johandrex/node-express#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "pg": "^8.6.0"
   }

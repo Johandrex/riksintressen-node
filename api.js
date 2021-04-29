@@ -1,7 +1,10 @@
 /* express, REST API */
 const express = require('express');
 const app = express(); /* funktioner: app.get(), app.post(), app.put(), app.delete() */
-app.use(express.json());
+
+/* tillåter Cross-Origin Resource Sharing, alltså att andra webbsidor kommer åt API:n */
+const cors = require('cors');
+app.use(cors());
 
 /* importera databas funktioner som används av api:n */
 const database = require("./database");

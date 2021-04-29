@@ -8,7 +8,7 @@
 2. cd node-express
 
 # installera node moduler i projektet
-3. npm install express pg
+3. npm install express pg cors
 sudo npm i -g nodemon
 
 # starta applikationen
