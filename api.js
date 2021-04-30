@@ -23,6 +23,13 @@ function start() {
         res.send(JSON.stringify(data));
     });
 
+    /* hämtar alla tidigare versioner av ett riksintressen */
+    app.get('/api/riksintressen/historik/:id', async (req, res) => {
+        const data = await database.getHistorik(req.params.id);
+        res.setHeader("content-type", "application/json");
+        res.send(JSON.stringify(data));
+    });
+
     /* hämta specifikt riksintresse utifrån ID */
     app.get('/api/riksintressen/:id', async (req, res) => {
         const data = await database.getRiksintresse(req.params.id);
