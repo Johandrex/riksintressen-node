@@ -83,7 +83,7 @@ async function GetKulturmiljotyp() {
 /* hämta ett riksintresse */
 async function getRiksintresse(id) {
     try {
-        const results = await pool.query("SELECT * FROM riksintresse WHERE riksintresse_id = " + id);
+        const results = await pool.query("SELECT * FROM riksintresse WHERE id = " + id);
         return results.rows;
     } catch(e) {
         console.log("couldn't execute getRiksintresse(id), exception: " + e);

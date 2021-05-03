@@ -51,6 +51,28 @@ function start() {
         res.send(JSON.stringify(data));
     });
 
+
+    /* hämtar alla kommuner */
+    app.get('/api/kommuner', async (req, res) => {
+        const data = await database.getKommuner();
+        res.setHeader("content-type", "application/json");
+        res.send(JSON.stringify(data));
+    });
+
+    /* hämtar alla lan */
+    app.get('/api/lan', async (req, res) => {
+        const data = await database.GetLan();
+        res.setHeader("content-type", "application/json");
+        res.send(JSON.stringify(data));
+    });
+
+    /* hämtar alla kommuner */
+    app.get('/api/kulturmiljotyper', async (req, res) => {
+        const data = await database.GetKulturmiljotyp();
+        res.setHeader("content-type", "application/json");
+        res.send(JSON.stringify(data));
+    });
+
     app.listen(3000, () => console.log('Server started on port 3000')); // starta servern
 }
 
