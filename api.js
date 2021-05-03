@@ -39,14 +39,14 @@ function start() {
 
     /* hämtar alla geografisk data */
     app.get('/api/geometrier/:id', async (req, res) => {
-        const data = await database.getGeometrier();
+        const data = await database.getGeometri(req.params.id);
         res.setHeader("content-type", "application/json");
         res.send(JSON.stringify(data));
     });
 
-    /* hämtar specifikt geografisk data utifrån ID (alltså inte riksintressets ID, polygonens ID) */
+    /* hämtar specifikt geografisk data utifrån riksintressets ID */
     app.get('/api/geometrier', async (req, res) => {
-        const data = await database.getGeometri(req.params.id);
+        const data = await database.getGeometrier();
         res.setHeader("content-type", "application/json");
         res.send(JSON.stringify(data));
     });

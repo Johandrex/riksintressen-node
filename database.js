@@ -121,7 +121,7 @@ async function getRiksintresseKommuner(id) {
         const results = await pool.query("SELECT kommun.namn as Kommun, lan.namn as Lan FROM riksintresse_i_kommun" +
             " INNER JOIN kommun ON kommun.kod = riksintresse_i_kommun.kommun_kod" +
             " INNER JOIN lan ON lan.kod = kommun.lan_kod" +
-            " WHERE riksintresse_id = 1;");
+            " WHERE riksintresse_id = " + id);
         return results.rows;
     } catch(e) {
         console.log("couldn't execute getHistorik(id), exception: " + e);
@@ -143,7 +143,9 @@ async function getGeometrier() {
 /* hämta en geometri */
 async function getGeometri(id) {
     try {
-        const results = await pool.query("SELECT * FROM geometri WHERE id = " + id);
+        const results = await pool.query("SELECT geometri.id, geometri.polygon, geometri.shape_area FROM geometri" +
+            " INNER JOIN riksintresse ON geometri.id = riksintresse.geometri_id" +
+            " WHERE riksintresse.id = + " + id);
         return results.rows;
     } catch(e) {
         console.log("couldn't execute getGeometrie(id), exception: " + e);
