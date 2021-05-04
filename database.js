@@ -166,6 +166,7 @@ async function getGeometri(id) {
 module.exports = {
     connect: connect,
     getRiksintressen: getRiksintressen,
+    getRiksintressenforList: getRiksintressenforList,
 
     getKommuner: getKommuner,
     GetLan: GetLan,
