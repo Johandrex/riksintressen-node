@@ -24,8 +24,8 @@ function start() {
     });
 
      /* hämtar listdata med alla riksintressen*/
-     app.getList('/api/riksintressen/list', async (req, res) => {
-        const data = await database.getRiksintressenforList();
+     app.get('/api/riksintressen/list', async (req, res) => {
+        const data = await database.getRiksintressenList();
         res.setHeader("content-type", "application/json");
         res.send(JSON.stringify(data));
     });
