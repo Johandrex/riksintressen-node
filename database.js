@@ -22,6 +22,16 @@ async function getRiksintressen() {
         return [];
     }
 }
+/* hämta alla existerande riksintressen */
+async function getRiksintressenforList() {
+    try {
+        const results = await pool.query("SELECT ri.namn, ri.id, array_agg(kulturmiljotyp.namn) kategorier, array_agg(kommun.namn) kommuner, lan.namn FROM riksintresse AS ri JOIN riksintresse_har_kulturmiljotyp AS r_h_k ON r_h_k.riksintresse_id = ri.id JOIN kulturmiljotyp ON r_h_k.kulturmiljotyp_id = kulturmiljotyp.id JOIN riksintresse_i_kommun ON riksintresse_i_kommun.riksintresse_id = ri.id JOIN kommun ON riksintresse_i_kommun.kommun_kod = kommun.kod JOIN lan ON kommun.lan_kod = lan.kod GROUP BY ri.id, ri.namn, lan.namn ORDER BY ri.id");
+        return results.rows;
+    } catch(e) {
+        console.log("couldn't execute getRiksintressen, exception: " + e);
+        return [];
+    }
+}
 
 /* hämta kulturmiljötyper kopplade till alla riksintressen */
 async function getRiksintressenKulturmiljotyper() {
