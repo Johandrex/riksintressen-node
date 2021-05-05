@@ -101,7 +101,17 @@ async function GetKulturmiljotyp() {
 /* hämta ett riksintresse */
 async function getRiksintresse(id) {
     try {
-        const results = await pool.query("SELECT * FROM riksintresse WHERE id = " + id + " order by id");
+        const results = await pool.query("SELECT ri.id, ri.namn as namn, ri.beskrivning, ri.motivering, ri.version, ri.geometri_id, array_agg(DISTINCT kulturmiljotyp.namn) kategorier, array_agg(DISTINCT kommun.namn) kommuner, array_agg(DISTINCT lan.namn) lan" +
+        " FROM riksintresse AS ri" +
+        " INNER JOIN riksintresse_har_kulturmiljotyp AS r_h_k ON r_h_k.riksintresse_id = ri.id" +
+        " INNER JOIN kulturmiljotyp ON r_h_k.kulturmiljotyp_id = kulturmiljotyp.id" +
+        " INNER JOIN riksintresse_i_kommun ON riksintresse_i_kommun.riksintresse_id = ri.id" +
+        " INNER JOIN kommun ON riksintresse_i_kommun.kommun_kod = kommun.kod" +
+        " INNER JOIN lan ON kommun.lan_kod = lan.kod" +
+        
+        " WHERE ri.id = " + id +
+        " GROUP  BY ri.id, ri.namn, ri.beskrivning, ri.motivering, ri.geometri_id" +
+        " ORDER BY ri.namn");
         return results.rows;
     } catch(e) {
         console.log("couldn't execute getRiksintresse(id), exception: " + e);
