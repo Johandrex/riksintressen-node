@@ -15,7 +15,7 @@ async function connect() {
 /* hämta alla existerande riksintressen */
 async function getRiksintressen() {
     try {
-        const results = await pool.query("SELECT * FROM riksintresse ORDER BY id");
+        const results = await pool.query("SELECT * FROM riksintresse ORDER BY namn");
         return results.rows;
     } catch(e) {
         console.log("couldn't execute getRiksintressen, exception: " + e);
@@ -33,7 +33,7 @@ async function getRiksintressenList() {
         " INNER JOIN kommun ON riksintresse_i_kommun.kommun_kod = kommun.kod " +
         " INNER JOIN lan ON kommun.lan_kod = lan.kod " +
         " GROUP  BY ri.id, ri.namn " +
-        " ORDER BY ri.id");
+        " ORDER BY ri.namn");
         return results.rows;
     } catch(e) {
         console.log("couldn't execute getRiksintressen, exception: " + e);
@@ -68,7 +68,7 @@ async function getRiksintressenKommuner() {
 /* hämta de kommuner ett riksintresse ligger i */
 async function getKommuner() {
     try {
-        const results = await pool.query("SELECT * FROM kommun;");
+        const results = await pool.query("SELECT * FROM kommun ORDER BY;");
         return results.rows;
     } catch(e) {
         console.log("couldn't execute getKommuner(), exception: " + e);
@@ -90,7 +90,7 @@ async function GetLan() {
 /* hämta de kommuner ett riksintresse ligger i */
 async function GetKulturmiljotyp() {
     try {
-        const results = await pool.query("SELECT * FROM kulturmiljotyp");
+        const results = await pool.query("SELECT * FROM kulturmiljotyp ORDER BY namn");
         return results.rows;
     } catch(e) {
         console.log("couldn't execute GetKulturmiljotyp(id), exception: " + e);
