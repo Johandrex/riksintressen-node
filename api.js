@@ -6,11 +6,19 @@ const app = express(); /* funktioner: app.get(), app.post(), app.put(), app.dele
 const cors = require('cors');
 app.use(cors());
 
+// middleware, for app.get()
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 /* importera databas funktioner som används av api:n */
 const database = require("./database");
+const { response } = require('express');
 
 /* starta api */
 function start() {
+
+    /*********** GET ***********/
+
     /* för att kolla så API:n fungerar */
     app.get('/', (req, res) => { /* kommer åt webbsidan */
         res.send('Welcome to our super API!');
@@ -56,6 +64,23 @@ function start() {
         const data = await database.GetKulturmiljotyp();
         res.setHeader("content-type", "application/json");
         res.send(JSON.stringify(data));
+    });
+
+    /*********** POST ***********/
+
+    /* uppdatera ett existerande riksintresse */
+    app.post('/api/update/riksintresse', async (req, res) => {
+        let message = "";
+
+        try {
+            console.log(req.body); // vår json
+
+            message = JSON.stringify("Successfully updated riksintresse " + req.body.id);
+        } catch(exception) {
+            message = JSON.stringify("Could not update riksintresse with object " + req + "\nexception: " + exception);
+        }
+
+        res.send(message);
     });
 
     app.listen(3000, () => console.log('Server started on port 3000')); // starta servern
