@@ -16,23 +16,9 @@ function start() {
         res.send('Welcome to our super API!');
     });
 
-    /* hämtar alla riksintressen */
-    app.get('/api/riksintressen', async (req, res) => {
-        const data = await database.getRiksintressen();
-        res.setHeader("content-type", "application/json");
-        res.send(JSON.stringify(data));
-    });
-
      /* hämtar listdata med alla riksintressen*/
-     app.get('/api/riksintressen/list', async (req, res) => {
+    app.get('/api/riksintressen/list', async (req, res) => {
         const data = await database.getRiksintressenList();
-        res.setHeader("content-type", "application/json");
-        res.send(JSON.stringify(data));
-    });
-    
-    /* hämtar alla tidigare versioner av ett riksintressen */
-    app.get('/api/riksintressen/historik/:id', async (req, res) => {
-        const data = await database.getHistorik(req.params.id);
         res.setHeader("content-type", "application/json");
         res.send(JSON.stringify(data));
     });
@@ -44,20 +30,12 @@ function start() {
         res.send(JSON.stringify(data));
     });
 
-    /* hämtar alla geografisk data */
-    app.get('/api/geometrier/:id', async (req, res) => {
-        const data = await database.getGeometri(req.params.id);
+    /* hämtar alla tidigare versioner av ett riksintressen */
+    app.get('/api/riksintressen/historik/:id', async (req, res) => {
+        const data = await database.getHistorik(req.params.id);
         res.setHeader("content-type", "application/json");
         res.send(JSON.stringify(data));
     });
-
-    /* hämtar specifikt geografisk data utifrån riksintressets ID */
-    app.get('/api/geometrier', async (req, res) => {
-        const data = await database.getGeometrier();
-        res.setHeader("content-type", "application/json");
-        res.send(JSON.stringify(data));
-    });
-
 
     /* hämtar alla kommuner */
     app.get('/api/kommuner', async (req, res) => {

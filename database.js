@@ -12,17 +12,7 @@ async function connect() {
     }
 }
 
-/* hämta alla existerande riksintressen */
-async function getRiksintressen() {
-    try {
-        const results = await pool.query("SELECT * FROM riksintresse ORDER BY namn");
-        return results.rows;
-    } catch(e) {
-        console.log("couldn't execute getRiksintressen, exception: " + e);
-        return [];
-    }
-}
-/* hämta alla existerande riksintressen */
+/* hämta alla existerande riksintressen tillsammans med relevant data för listan */
 async function getRiksintressenList() {
     try {
         const results = await pool.query("SELECT ri.namn, ri.id, array_agg(DISTINCT kulturmiljotyp.namn) kategorier, array_agg(DISTINCT kommun.namn) kommuner, array_agg(DISTINCT lan.namn) lan" +
@@ -41,34 +31,10 @@ async function getRiksintressenList() {
     }
 }
 
-/* hämta kulturmiljötyper kopplade till alla riksintressen */
-async function getRiksintressenKulturmiljotyper() {
-    try {
-        const results = await pool.query("SELECT * FROM riksintresse ORDER BY id");
-        return results.rows;
-    } catch(e) {
-        console.log("couldn't execute getRiksintressenKulturmiljotyp(), exception: " + e);
-        return [];
-    }
-}
-
-/* hämta kommuner kopplade till alla riksintressen */
-async function getRiksintressenKommuner() {
-    try {
-        const results = await pool.query("SELECT kulturmiljotyp.id, kulturmiljotyp.namn from riksintresse_har_kulturmiljotyp" + 
-        " INNER JOIN kulturmiljotyp ON riksintresse_har_kulturmiljotyp.kulturmiljotyp_id = kulturmiljotyp.id" + 
-        " WHERE riksintresse_id = " + id + " ORDER BY riksintresse_id");
-        return results.rows;
-    } catch(e) {
-        console.log("couldn't execute getRiksintressenKommuner(), exception: " + e);
-        return [];
-    }
-}
-
 /* hämta de kommuner ett riksintresse ligger i */
 async function getKommuner() {
     try {
-        const results = await pool.query("SELECT * FROM kommun ORDER BY;");
+        const results = await pool.query("SELECT * FROM kommun;");
         return results.rows;
     } catch(e) {
         console.log("couldn't execute getKommuner(), exception: " + e);
@@ -130,67 +96,12 @@ async function getRiksintresseHistorik(id) {
     }
 }
 
-/* hämta ett riksintresses kulturmiljötyper */
-async function getRiksintresseKulturmiljo(id) {
-    try {
-        const results = await pool.query("SELECT kulturmiljotyp.id, kulturmiljotyp.namn from riksintresse_har_kulturmiljotyp" + 
-        " INNER JOIN kulturmiljotyp ON riksintresse_har_kulturmiljotyp.kulturmiljotyp_id = kulturmiljotyp.id" + 
-        " WHERE riksintresse_id = " + id + " ORDER BY riksintresse_id");
-        return results.rows;
-    } catch(e) {
-        console.log("couldn't execute getRiksintresseKulturmiljö(id), exception: " + e);
-        return [];
-    }
-}
-
-/* hämta de kommuner ett riksintresse ligger i */
-async function getRiksintresseKommuner(id) {
-    try {
-        const results = await pool.query("SELECT kommun.namn as Kommun, lan.namn as Lan FROM riksintresse_i_kommun" +
-            " INNER JOIN kommun ON kommun.kod = riksintresse_i_kommun.kommun_kod" +
-            " INNER JOIN lan ON lan.kod = kommun.lan_kod" +
-            " WHERE riksintresse_id = " + id);
-        return results.rows;
-    } catch(e) {
-        console.log("couldn't execute getHistorik(id), exception: " + e);
-        return [];
-    }
-}
-
-/* hämta alla existerande geometrier */
-async function getGeometrier() {
-    try {
-        const results = await pool.query("SELECT * FROM geometri");
-        return results.rows;
-    } catch(e) {
-        console.log("couldn't execute getGeometrier, exception: " + e);
-        return [];
-    }
-}
-
-/* hämta en geometri */
-async function getGeometri(id) {
-    try {
-        const results = await pool.query("SELECT geometri.id, geometri.polygon, geometri.shape_area FROM geometri" +
-            " INNER JOIN riksintresse ON geometri.id = riksintresse.geometri_id" +
-            " WHERE riksintresse.id = + " + id);
-        return results.rows;
-    } catch(e) {
-        console.log("couldn't execute getGeometrie(id), exception: " + e);
-        return [];
-    }
-}
-
 module.exports = {
     connect: connect,
-    getRiksintressen: getRiksintressen,
     getRiksintressenList: getRiksintressenList,
+    getRiksintresse: getRiksintresse,
 
     getKommuner: getKommuner,
     GetLan: GetLan,
     GetKulturmiljotyp: GetKulturmiljotyp,
-
-    getRiksintresse: getRiksintresse,
-    getGeometrier: getGeometrier,
-    getGeometri: getGeometri
 }
