@@ -7,7 +7,7 @@ async function connect() {
     try {
         await pool.connect();
         console.log("Connected to database");
-    } catch(e) {
+    } catch (e) {
         console.log("Couldn't connect to database, error: " + e);
     }
 }
@@ -16,16 +16,16 @@ async function connect() {
 async function getRiksintressenList() {
     try {
         const results = await pool.query("SELECT ri.namn, ri.id, array_agg(DISTINCT kulturmiljotyp.namn) kategorier, array_agg(DISTINCT kommun.namn) kommuner, array_agg(DISTINCT lan.namn) lan" +
-        " FROM riksintresse AS ri " + 
-        " INNER JOIN riksintresse_har_kulturmiljotyp AS r_h_k ON r_h_k.riksintresse_id = ri.id " +
-        " INNER JOIN kulturmiljotyp ON r_h_k.kulturmiljotyp_id = kulturmiljotyp.id " +
-        " INNER JOIN riksintresse_i_kommun ON riksintresse_i_kommun.riksintresse_id = ri.id " +
-        " INNER JOIN kommun ON riksintresse_i_kommun.kommun_kod = kommun.kod " +
-        " INNER JOIN lan ON kommun.lan_kod = lan.kod " +
-        " GROUP  BY ri.id, ri.namn " +
-        " ORDER BY ri.namn");
+            " FROM riksintresse AS ri " +
+            " INNER JOIN riksintresse_har_kulturmiljotyp AS r_h_k ON r_h_k.riksintresse_id = ri.id " +
+            " INNER JOIN kulturmiljotyp ON r_h_k.kulturmiljotyp_id = kulturmiljotyp.id " +
+            " INNER JOIN riksintresse_i_kommun ON riksintresse_i_kommun.riksintresse_id = ri.id " +
+            " INNER JOIN kommun ON riksintresse_i_kommun.kommun_kod = kommun.kod " +
+            " INNER JOIN lan ON kommun.lan_kod = lan.kod " +
+            " GROUP  BY ri.id, ri.namn " +
+            " ORDER BY ri.namn");
         return results.rows;
-    } catch(e) {
+    } catch (e) {
         console.log("couldn't execute getRiksintressen, exception: " + e);
         return [];
     }
@@ -36,7 +36,7 @@ async function getKommuner() {
     try {
         const results = await pool.query("SELECT * FROM kommun;");
         return results.rows;
-    } catch(e) {
+    } catch (e) {
         console.log("couldn't execute getKommuner(), exception: " + e);
         return [];
     }
@@ -47,7 +47,7 @@ async function GetLan() {
     try {
         const results = await pool.query("SELECT * FROM lan");
         return results.rows;
-    } catch(e) {
+    } catch (e) {
         console.log("couldn't execute GetLan(), exception: " + e);
         return [];
     }
@@ -58,7 +58,7 @@ async function GetKulturmiljotyp() {
     try {
         const results = await pool.query("SELECT * FROM kulturmiljotyp ORDER BY namn");
         return results.rows;
-    } catch(e) {
+    } catch (e) {
         console.log("couldn't execute GetKulturmiljotyp(id), exception: " + e);
         return [];
     }
@@ -68,18 +68,18 @@ async function GetKulturmiljotyp() {
 async function getRiksintresse(id) {
     try {
         const results = await pool.query("SELECT ri.id, ri.namn as namn, ri.beskrivning, ri.motivering, ri.version, ri.geometri_id, array_agg(DISTINCT kulturmiljotyp.namn) kategorier, array_agg(DISTINCT kommun.namn) kommuner, array_agg(DISTINCT lan.namn) lan" +
-        " FROM riksintresse AS ri" +
-        " INNER JOIN riksintresse_har_kulturmiljotyp AS r_h_k ON r_h_k.riksintresse_id = ri.id" +
-        " INNER JOIN kulturmiljotyp ON r_h_k.kulturmiljotyp_id = kulturmiljotyp.id" +
-        " INNER JOIN riksintresse_i_kommun ON riksintresse_i_kommun.riksintresse_id = ri.id" +
-        " INNER JOIN kommun ON riksintresse_i_kommun.kommun_kod = kommun.kod" +
-        " INNER JOIN lan ON kommun.lan_kod = lan.kod" +
-        
-        " WHERE ri.id = " + id +
-        " GROUP  BY ri.id, ri.namn, ri.beskrivning, ri.motivering, ri.geometri_id" +
-        " ORDER BY ri.namn");
+            " FROM riksintresse AS ri" +
+            " INNER JOIN riksintresse_har_kulturmiljotyp AS r_h_k ON r_h_k.riksintresse_id = ri.id" +
+            " INNER JOIN kulturmiljotyp ON r_h_k.kulturmiljotyp_id = kulturmiljotyp.id" +
+            " INNER JOIN riksintresse_i_kommun ON riksintresse_i_kommun.riksintresse_id = ri.id" +
+            " INNER JOIN kommun ON riksintresse_i_kommun.kommun_kod = kommun.kod" +
+            " INNER JOIN lan ON kommun.lan_kod = lan.kod" +
+
+            " WHERE ri.id = " + id +
+            " GROUP  BY ri.id, ri.namn, ri.beskrivning, ri.motivering, ri.geometri_id" +
+            " ORDER BY ri.namn");
         return results.rows;
-    } catch(e) {
+    } catch (e) {
         console.log("couldn't execute getRiksintresse(id), exception: " + e);
         return [];
     }
@@ -90,7 +90,7 @@ async function getRiksintresseHistorik(id) {
     try {
         const results = await pool.query("SELECT * FROM riksintresse_har_version WHERE riksintresse_id = " + id);
         return results.rows;
-    } catch(e) {
+    } catch (e) {
         console.log("couldn't execute getRiksintresseHistorik(id), exception: " + e);
         return [];
     }

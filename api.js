@@ -8,11 +8,15 @@ app.use(cors());
 
 // middleware, for app.get()
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+    extended: false
+}));
 
 /* importera databas funktioner som används av api:n */
 const database = require("./database");
-const { response } = require('express');
+const {
+    response
+} = require('express');
 
 /* starta api */
 function start() {
@@ -20,11 +24,12 @@ function start() {
     /*********** GET ***********/
 
     /* för att kolla så API:n fungerar */
-    app.get('/', (req, res) => { /* kommer åt webbsidan */
+    app.get('/', (req, res) => {
+        /* kommer åt webbsidan */
         res.send('Welcome to our super API!');
     });
 
-     /* hämtar listdata med alla riksintressen*/
+    /* hämtar listdata med alla riksintressen*/
     app.get('/api/riksintressen/list', async (req, res) => {
         const data = await database.getRiksintressenList();
         res.setHeader("content-type", "application/json");
@@ -76,7 +81,7 @@ function start() {
             console.log(req.body); // vår json
 
             message = JSON.stringify("Successfully updated riksintresse " + req.body.id);
-        } catch(exception) {
+        } catch (exception) {
             message = JSON.stringify("Could not update riksintresse with object " + req + "\nexception: " + exception);
         }
 
