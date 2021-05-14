@@ -59,14 +59,14 @@ function start() {
 
     /* hämtar alla lan */
     app.get('/api/lan', async (req, res) => {
-        const data = await database.GetLan();
+        const data = await database.getLan();
         res.setHeader("content-type", "application/json");
         res.send(JSON.stringify(data));
     });
 
     /* hämtar alla kommuner */
     app.get('/api/kulturmiljotyper', async (req, res) => {
-        const data = await database.GetKulturmiljotyp();
+        const data = await database.getKulturmiljotyp();
         res.setHeader("content-type", "application/json");
         res.send(JSON.stringify(data));
     });
@@ -78,11 +78,30 @@ function start() {
         let message = "";
 
         try {
-            console.log(req.body); // vår json
+            // console.log(req.body); // vår json
+
+            let result = await database.updateRiksintresse(req.body); // uppdatera objekt
+            console.log(result);
 
             message = JSON.stringify("Successfully updated riksintresse " + req.body.id);
         } catch (exception) {
             message = JSON.stringify("Could not update riksintresse with object " + req + "\nexception: " + exception);
+        }
+
+        res.send(message);
+    });
+
+    /* uppdatera ett existerande riksintresse */
+    app.post('/api/create/riksintresse', async (req, res) => {
+        let message = "";
+
+        try {
+            console.log(req.body); // vår json
+
+
+            message = JSON.stringify("Successfully created riksintresse " + req.body.id);
+        } catch (exception) {
+            message = JSON.stringify("Could not create riksintresse with object " + req + "\nexception: " + exception);
         }
 
         res.send(message);

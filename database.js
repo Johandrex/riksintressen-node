@@ -43,7 +43,7 @@ async function getKommuner() {
 }
 
 /* hämta de kommuner ett riksintresse ligger i */
-async function GetLan() {
+async function getLan() {
     try {
         const results = await pool.query("SELECT * FROM lan");
         return results.rows;
@@ -54,7 +54,7 @@ async function GetLan() {
 }
 
 /* hämta de kommuner ett riksintresse ligger i */
-async function GetKulturmiljotyp() {
+async function getKulturmiljotyp() {
     try {
         const results = await pool.query("SELECT * FROM kulturmiljotyp ORDER BY namn");
         return results.rows;
@@ -67,7 +67,7 @@ async function GetKulturmiljotyp() {
 /* hämta ett riksintresse */
 async function getRiksintresse(id) {
     try {
-        const results = await pool.query("SELECT ri.id, ri.namn as namn, ri.beskrivning, ri.motivering, ri.version, ri.geometri_id, array_agg(DISTINCT kulturmiljotyp.namn) kategorier, array_agg(DISTINCT kommun.namn) kommuner, array_agg(DISTINCT lan.namn) lan" +
+        const results = await pool.query("SELECT ri.id, ri.namn as namn, ri.beskrivning, ri.motivering, ri.cederat, ri.version, ri.geometri_id, array_agg(DISTINCT kulturmiljotyp.namn) kategorier, array_agg(DISTINCT kommun.namn) kommuner, array_agg(DISTINCT lan.namn) lan" +
             " FROM riksintresse AS ri" +
             " LEFT JOIN riksintresse_har_kulturmiljotyp AS r_h_k ON r_h_k.riksintresse_id = ri.id" +
             " LEFT JOIN kulturmiljotyp ON r_h_k.kulturmiljotyp_id = kulturmiljotyp.id" +
@@ -95,12 +95,43 @@ async function getRiksintresseHistorik(id) {
     }
 }
 
+/* hämta ett riksintresses tidigare versioner */
+async function updateRiksintresse(json) {
+    try {
+        console.log("updateRiksintresse() received object: ");
+        console.log(json);
+
+        if (json.id != null) { // gå igenom varje json variabel som inte är null, och uppdatera de
+            if (json.namn != null) await pool.query(`UPDATE riksintresse SET namn = '${json.namn}' WHERE id = ${json.id}`);
+            if (json.beskrivning != null) await pool.query(`UPDATE riksintresse SET beskrivning = '${json.beskrivning}' WHERE id = ${json.id}`);
+            if (json.motivering != null) await pool.query(`UPDATE riksintresse SET motivering = '${json.motivering}' WHERE id = ${json.id}`);
+            if (json.cederat != null) await pool.query(`UPDATE riksintresse SET cederat = '${json.cederat}' WHERE id = ${json.id}`);
+
+            if (json.kategorier != null) {
+                await pool.query(`DELETE FROM riksintresse_har_kulturmiljotyp WHERE riksintresse_id = ${json.id}`); // radera existerande kulturmiljötyper
+
+                json.kategorier.forEach(async k => { // gå igenom alla kategorier i objektet
+                    let kulturmiljotypId = await pool.query(`SELECT id FROM kulturmiljotyp WHERE namn = '${k}'`); // hämta ett id från varje kulturmiljötyp
+                    await pool.query(`INSERT INTO riksintresse_har_kulturmiljotyp(riksintresse_id, kulturmiljotyp_id) VALUES(${json.id}, ${kulturmiljotypId.rows[0].id})`) // sätt in kulturmiljötyp
+                });
+            }
+        }
+
+        return "Riksintresse " + json.id + " updated!";
+    } catch (e) {
+        console.log("updateRiksintresse(), exception: " + e);
+        return [];
+    }
+}
+
 module.exports = {
     connect: connect,
     getRiksintressenList: getRiksintressenList,
     getRiksintresse: getRiksintresse,
 
     getKommuner: getKommuner,
-    GetLan: GetLan,
-    GetKulturmiljotyp: GetKulturmiljotyp,
+    getLan: getLan,
+    getKulturmiljotyp: getKulturmiljotyp,
+
+    updateRiksintresse: updateRiksintresse,
 }
