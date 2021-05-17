@@ -84,7 +84,7 @@ function start() {
         }
 
         console.log(message);
-        res.send(message);
+        res.send(JSON.stringify(message));
     });
 
     /* uppdatera ett existerande riksintresse */
@@ -97,7 +97,7 @@ function start() {
             message = "Could not create riksintresse, exception: " + exception;
         }
 
-        console.log(message);
+        console.log(message.message + " " + message.id);
         res.send(message);
     });
 
