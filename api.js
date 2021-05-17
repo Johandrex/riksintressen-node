@@ -36,7 +36,7 @@ function start() {
         res.send(JSON.stringify(data));
     });
 
-    /* hämtar listdata med alla riksintressen*/
+    /* hämtar listdata med alla raderade riksintressen*/
     app.get('/api/riksintressen/list/deleted', async (req, res) => {
         const data = await database.getRiksintressenListDeleted();
         res.setHeader("content-type", "application/json");

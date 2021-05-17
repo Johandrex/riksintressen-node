@@ -32,7 +32,7 @@ async function getRiksintressenList() {
     }
 }
 
-/* hämta alla existerande riksintressen tillsammans med cederade/raderade riksintressen */
+/* hämta alla raderade riksintressen */
 async function getRiksintressenListDeleted() {
     try {
         const results = await pool.query("SELECT ri.namn, ri.id, array_agg(DISTINCT kulturmiljotyp.namn) kategorier, array_agg(DISTINCT kommun.namn) kommuner, array_agg(DISTINCT lan.namn) lan" +
@@ -42,6 +42,7 @@ async function getRiksintressenListDeleted() {
             " LEFT JOIN riksintresse_i_kommun ON riksintresse_i_kommun.riksintresse_id = ri.id " +
             " LEFT JOIN kommun ON riksintresse_i_kommun.kommun_kod = kommun.kod " +
             " LEFT JOIN lan ON kommun.lan_kod = lan.kod " +
+            " WHERE cederat = true " +
             " GROUP  BY ri.id, ri.namn " +
             " ORDER BY ri.namn");
         return results.rows;
