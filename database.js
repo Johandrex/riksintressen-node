@@ -22,6 +22,26 @@ async function getRiksintressenList() {
             " LEFT JOIN riksintresse_i_kommun ON riksintresse_i_kommun.riksintresse_id = ri.id " +
             " LEFT JOIN kommun ON riksintresse_i_kommun.kommun_kod = kommun.kod " +
             " LEFT JOIN lan ON kommun.lan_kod = lan.kod " +
+            " WHERE cederat = false OR cederat IS null " +
+            " GROUP  BY ri.id, ri.namn " +
+            " ORDER BY ri.namn");
+        return results.rows;
+    } catch (e) {
+        console.log("couldn't execute getRiksintressen, exception: " + e);
+        return [];
+    }
+}
+
+/* hämta alla existerande riksintressen tillsammans med cederade/raderade riksintressen */
+async function getRiksintressenListDeleted() {
+    try {
+        const results = await pool.query("SELECT ri.namn, ri.id, array_agg(DISTINCT kulturmiljotyp.namn) kategorier, array_agg(DISTINCT kommun.namn) kommuner, array_agg(DISTINCT lan.namn) lan" +
+            " FROM riksintresse AS ri " +
+            " LEFT JOIN riksintresse_har_kulturmiljotyp AS r_h_k ON r_h_k.riksintresse_id = ri.id " +
+            " LEFT JOIN kulturmiljotyp ON r_h_k.kulturmiljotyp_id = kulturmiljotyp.id " +
+            " LEFT JOIN riksintresse_i_kommun ON riksintresse_i_kommun.riksintresse_id = ri.id " +
+            " LEFT JOIN kommun ON riksintresse_i_kommun.kommun_kod = kommun.kod " +
+            " LEFT JOIN lan ON kommun.lan_kod = lan.kod " +
             " GROUP  BY ri.id, ri.namn " +
             " ORDER BY ri.namn");
         return results.rows;
@@ -159,6 +179,7 @@ async function createRiksintresse(json) {
 module.exports = {
     connect: connect,
     getRiksintressenList: getRiksintressenList,
+    getRiksintressenListDeleted: getRiksintressenListDeleted,
     getRiksintresse: getRiksintresse,
 
     getKommuner: getKommuner,
