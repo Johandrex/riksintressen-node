@@ -6,6 +6,12 @@ const app = express(); /* funktioner: app.get(), app.post(), app.put(), app.dele
 const cors = require('cors');
 app.use(cors());
 
+// enable files upload
+const fileUpload = require('express-fileupload');
+app.use(fileUpload({
+    createParentPath: true
+}));
+
 // middleware, for app.get()
 app.use(express.json());
 app.use(express.urlencoded({
@@ -106,6 +112,37 @@ function start() {
 
         console.log(message.message + " " + message.id);
         res.send(message);
+    });
+
+    /* ladda upp dokument/bilder */
+    app.post('/api/upload', async (req, res) => {
+        try {
+            if (!req.files) {
+                res.send({
+                    status: false,
+                    message: 'No file uploaded'
+                });
+            } else {
+                let file = req.files.file;
+
+                //Use the mv() method to place the file in upload directory (i.e. "uploads")
+                console.log("File: " + file.name + " uploaded");
+                file.mv('uploads/' + file.name);
+
+                //send response
+                res.send({
+                    status: true,
+                    message: 'File is uploaded',
+                    data: {
+                        name: file.name,
+                        mimetype: file.mimetype,
+                        size: file.size
+                    }
+                });
+            }
+        } catch (err) {
+            res.status(500).send(err);
+        }
     });
 
     app.listen(3000, () => console.log('Server started on port 3000')); // starta servern
