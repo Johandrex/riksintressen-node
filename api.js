@@ -8,9 +8,11 @@ app.use(cors());
 
 // enable files upload
 const fileUpload = require('express-fileupload');
+const fs = require("fs");
 app.use(fileUpload({
     createParentPath: true
 }));
+app.use(express.static("./uploads")); // Gör uploads offentligt för åtkomst, utanför express
 
 // middleware, for app.get()
 app.use(express.json());
@@ -21,7 +23,8 @@ app.use(express.urlencoded({
 /* importera databas funktioner som används av api:n */
 const database = require("./database");
 const {
-    response
+    response,
+    static
 } = require('express');
 
 /* starta api */
@@ -84,7 +87,69 @@ function start() {
         res.send(JSON.stringify(data));
     });
 
+
+    /* ladda upp dokument/bilder */
+    /*
+    app.get('/api/files/:id', async (req, res) => {
+        try {
+            const directoryPath = "uploads/" + req.params.id;
+
+            fs.readdir(directoryPath, function (err, files) {
+                if (err) {
+                    res.status(500).send({
+                        message: "Unable to scan files!",
+                    });
+                }
+
+                let fileInfos = [];
+
+                files.forEach((file) => {
+                    fileInfos.push({
+                        name: file,
+                        url: req.params.id + "/" + file,
+                    });
+                });
+
+                res.send("fileInfos");
+            });
+        } catch (err) {
+            res.send("x");
+        }
+    });
+    */
+
     /*********** POST ***********/
+
+    /* ladda upp dokument/bilder */
+    app.post('/api/upload', async (req, res) => {
+        try {
+            if (!req.files) {
+                res.send({
+                    status: false,
+                    message: 'No file uploaded'
+                });
+            } else {
+                let file = req.files.file;
+
+                //Use the mv() method to place the file in upload directory (i.e. "uploads")
+                console.log("File: " + file.name + " uploaded for id " + req.body.id);
+                file.mv('uploads/' + req.body.id + '/' + file.name);
+
+                //send response
+                res.send({
+                    status: true,
+                    message: 'File is uploaded',
+                    data: {
+                        name: file.name,
+                        mimetype: file.mimetype,
+                        size: file.size
+                    }
+                });
+            }
+        } catch (err) {
+            res.status(500).send(err);
+        }
+    });
 
     /* uppdatera ett existerande riksintresse */
     app.post('/api/update/riksintresse', async (req, res) => {
@@ -112,37 +177,6 @@ function start() {
 
         console.log(message.message + " " + message.id);
         res.send(message);
-    });
-
-    /* ladda upp dokument/bilder */
-    app.post('/api/upload', async (req, res) => {
-        try {
-            if (!req.files) {
-                res.send({
-                    status: false,
-                    message: 'No file uploaded'
-                });
-            } else {
-                let file = req.files.file;
-
-                //Use the mv() method to place the file in upload directory (i.e. "uploads")
-                console.log("File: " + file.name + " uploaded");
-                file.mv('uploads/' + file.name);
-
-                //send response
-                res.send({
-                    status: true,
-                    message: 'File is uploaded',
-                    data: {
-                        name: file.name,
-                        mimetype: file.mimetype,
-                        size: file.size
-                    }
-                });
-            }
-        } catch (err) {
-            res.status(500).send(err);
-        }
     });
 
     app.listen(3000, () => console.log('Server started on port 3000')); // starta servern

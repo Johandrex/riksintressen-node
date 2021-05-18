@@ -177,23 +177,6 @@ async function createRiksintresse(json) {
     }
 }
 
-/* När en uppladdning sker ska det lagras i databasen */
-async function upload(json) {
-    try {
-        console.log("upload() received object: ");
-        console.log(json);
-
-        return {
-            "id": id,
-            "message": "Successfully created riksintresse"
-        }
-    } catch (e) {
-        return {
-            "message": "createRiksintresse(), exception: " + e
-        }
-    }
-}
-
 module.exports = {
     connect: connect,
     getRiksintressenList: getRiksintressenList,
@@ -206,5 +189,4 @@ module.exports = {
 
     updateRiksintresse: updateRiksintresse,
     createRiksintresse: createRiksintresse,
-    upload: upload,
 }

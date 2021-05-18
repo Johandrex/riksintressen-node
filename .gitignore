@@ -7,6 +7,9 @@
 node_modules/
 dist/
 
+# Filuppladdningar ska inte lagras
+uploads/
+
 # Compiled Java class files
 *.class
 
