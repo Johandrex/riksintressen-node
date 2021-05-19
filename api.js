@@ -89,34 +89,32 @@ function start() {
 
 
     /* ladda upp dokument/bilder */
-    /*
     app.get('/api/files/:id', async (req, res) => {
         try {
             const directoryPath = "uploads/" + req.params.id;
 
             fs.readdir(directoryPath, function (err, files) {
-                if (err) {
-                    res.status(500).send({
-                        message: "Unable to scan files!",
-                    });
-                }
-
                 let fileInfos = [];
 
-                files.forEach((file) => {
-                    fileInfos.push({
-                        name: file,
-                        url: req.params.id + "/" + file,
+                if (files != undefined) {
+                    files.forEach((file) => {
+                        fileInfos.push({
+                            name: file,
+                            url: req.params.id + "/" + file,
+                        });
                     });
-                });
 
-                res.send("fileInfos");
+                    res.send(JSON.stringify(fileInfos));
+                } else if (err) {
+                    res.send({
+                        message: "There's no files associated with this riksintresse!",
+                    });
+                }
             });
         } catch (err) {
-            res.send("x");
+            res.send(err);
         }
     });
-    */
 
     /*********** POST ***********/
 
