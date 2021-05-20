@@ -1,6 +1,6 @@
 # README #
 
-### Installering ###
+### Installation ###
 # git clone
 1. git clone https://Johandrex@bitbucket.org/Johandrex/node-express.git
 
@@ -14,31 +14,13 @@ sudo npm i -g nodemon
 # starta applikationen
 4. nodemon index.js
 
+### Beskrivning ###
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Applikationsprogrammeringsgränssnittet fungerar som en länk mellan databasen och webbsidan, syftet är att webbsidan ska kunna lagra och hämta data från/till databasen. Den är byggd i node.js med ramverket Node Express. Applikationen är uppbyggd av filerna i api.js, database-pool.js, databas.js och index.js. 
 
-### What is this repository for? ###
+* index.js - startar databasen och API via database.js och api.js. 
+* database-pool.js - skapar en aktiv koppling till databasen, filen innehåller inloggningsuppgifter till databasen som ingen utomstående har åtkomst till. 
+* database.js - består av funktioner som utför SQL-queries mot databasen. 
+* api.js - öppnar upp portar som externa applikationer kommer åt. 
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+För att illustrera hur applikationsprogrammeringsgränssnittets design och flöde fungerar kan vi använda ett exempel. Ifall en klient går in på webbsidan och öppnar upp listan med riksintressena skickas en API request från webbsidan till denna API. Då åkallas app.get(“/api/riksintressen/list”) i vår api.js. Funktionen utför await database.getRiksintressenList() som i database.js utför en SQL-query med kommandot pool.query("SELECT * FROM riksintresse ORDER BY id"). När queryn har utförts tar API:n emot resultatet och skickar vidare den till webbsidan. 

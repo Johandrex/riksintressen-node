@@ -88,7 +88,7 @@ function start() {
     });
 
 
-    /* ladda upp dokument/bilder */
+    /* hämta ett riksintresses bilder/dokument */
     app.get('/api/files/:id', async (req, res) => {
         try {
             const directoryPath = "uploads/" + req.params.id;
@@ -96,7 +96,7 @@ function start() {
             fs.readdir(directoryPath, function (err, files) {
                 let fileInfos = [];
 
-                if (files != undefined) {
+                if (files != undefined) { // kontrollera att filer finns, loopa då igenom de
                     files.forEach((file) => {
                         fileInfos.push({
                             name: file,
@@ -105,7 +105,7 @@ function start() {
                     });
 
                     res.send(JSON.stringify(fileInfos));
-                } else if (err) {
+                } else if (err) { // ifall ett riksintresse inte har filer, informera om det.
                     res.send({
                         message: "There's no files associated with this riksintresse!",
                     });
