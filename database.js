@@ -27,12 +27,12 @@ async function getRiksintressenList() {
             " ORDER BY ri.namn");
         return results.rows;
     } catch (e) {
-        console.log("couldn't execute getRiksintressen, exception: " + e);
+        console.log("couldn't execute getRiksintressenList(), exception: " + e);
         return [];
     }
 }
 
-/* hämta alla raderade riksintressen */
+/* hämta alla raderade (eller cederade) riksintressen */
 async function getRiksintressenListDeleted() {
     try {
         const results = await pool.query("SELECT ri.namn, ri.id, array_agg(DISTINCT kulturmiljotyp.namn) kategorier, array_agg(DISTINCT kommun.namn) kommuner, array_agg(DISTINCT lan.namn) lan" +
@@ -47,12 +47,12 @@ async function getRiksintressenListDeleted() {
             " ORDER BY ri.namn");
         return results.rows;
     } catch (e) {
-        console.log("couldn't execute getRiksintressen, exception: " + e);
+        console.log("couldn't execute getRiksintressenListDeleted(), exception: " + e);
         return [];
     }
 }
 
-/* hämta de kommuner ett riksintresse ligger i */
+/* hämta alla kommuner */
 async function getKommuner() {
     try {
         const results = await pool.query("SELECT * FROM kommun;");
@@ -63,7 +63,7 @@ async function getKommuner() {
     }
 }
 
-/* hämta de kommuner ett riksintresse ligger i */
+/* hämta alla län */
 async function getLan() {
     try {
         const results = await pool.query("SELECT * FROM lan");
@@ -74,18 +74,18 @@ async function getLan() {
     }
 }
 
-/* hämta de kommuner ett riksintresse ligger i */
+/* hämta alla kulturmiljötyper */
 async function getKulturmiljotyp() {
     try {
         const results = await pool.query("SELECT * FROM kulturmiljotyp ORDER BY namn");
         return results.rows;
     } catch (e) {
-        console.log("couldn't execute GetKulturmiljotyp(id), exception: " + e);
+        console.log("couldn't execute GetKulturmiljotyp(), exception: " + e);
         return [];
     }
 }
 
-/* hämta ett riksintresse */
+/* hämta ett riksintresse utifrån dess id */
 async function getRiksintresse(id) {
     try {
         const results = await pool.query("SELECT ri.id, ri.namn as namn, ri.beskrivning, ri.motivering, ri.cederat, ri.version, ri.geometri_id, array_agg(DISTINCT kulturmiljotyp.namn) kategorier, array_agg(DISTINCT kommun.namn) kommuner, array_agg(DISTINCT lan.namn) lan" +
@@ -101,17 +101,6 @@ async function getRiksintresse(id) {
         return results.rows;
     } catch (e) {
         console.log("couldn't execute getRiksintresse(id), exception: " + e);
-        return [];
-    }
-}
-
-/* hämta ett riksintresses tidigare versioner */
-async function getRiksintresseHistorik(id) {
-    try {
-        const results = await pool.query("SELECT * FROM riksintresse_har_version WHERE riksintresse_id = " + id);
-        return results.rows;
-    } catch (e) {
-        console.log("couldn't execute getRiksintresseHistorik(id), exception: " + e);
         return [];
     }
 }
@@ -140,11 +129,11 @@ async function updateRiksintresse(json) {
 
         return "Successfully updated riksintresse " + json.id;
     } catch (e) {
-        return "updateRiksintresse(), exception: " + e;
+        return "couldn't execute updateRiksintresse(json), exception: " + e;
     }
 }
 
-/* skapa ett nytt riksintresse med json data */
+/* skapa ett nytt riksintresse utifrån den json data som tas emot */
 async function createRiksintresse(json) {
     try {
         console.log("createRiksintresse() received object: ");
@@ -172,7 +161,8 @@ async function createRiksintresse(json) {
         }
     } catch (e) {
         return {
-            "message": "createRiksintresse(), exception: " + e
+            "message": "couldn't execute createRiksintresse(json), exception: " + e
+
         }
     }
 }

@@ -32,7 +32,7 @@ function start() {
 
     /*********** GET ***********/
 
-    /* för att kolla så API:n fungerar */
+    /* startsidan för API */
     app.get('/', (req, res) => {
         /* kommer åt webbsidan */
         res.send('Welcome to our super API!');
@@ -55,13 +55,6 @@ function start() {
     /* hämta specifikt riksintresse utifrån ID */
     app.get('/api/riksintressen/:id', async (req, res) => {
         const data = await database.getRiksintresse(req.params.id);
-        res.setHeader("content-type", "application/json");
-        res.send(JSON.stringify(data));
-    });
-
-    /* hämtar alla tidigare versioner av ett riksintressen */
-    app.get('/api/riksintressen/historik/:id', async (req, res) => {
-        const data = await database.getHistorik(req.params.id);
         res.setHeader("content-type", "application/json");
         res.send(JSON.stringify(data));
     });
