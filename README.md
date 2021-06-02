@@ -23,4 +23,3 @@ Skapare: Johannes Seldevall, Sebastian Sjöberg och Wibke Du Rietz.
 4. installera nödvändiga plugins via npm "npm install express pg cors express-fileupload"
 5. installera nodemon globalt ifall node applikationen ska köras konstant och uppdateras vid förändringar "sudo npm i -g nodemon"
 6. starta applikationen med "node index.js" eller "nodemon index.js"
-hrqtjlqqau ikctcxcfxe leodixqxrg waagtquscm nfgipuiusj bwjgfowspi thxbjoecqm
