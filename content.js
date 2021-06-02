@@ -176,6 +176,3 @@ function start() {
 module.exports = {
     start: start
 }
-console.log("rqhul")
-console.log("redoa")
-console.log("rcahl")
